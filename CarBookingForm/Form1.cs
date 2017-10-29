@@ -9,7 +9,15 @@ namespace CarBookingForm
     {
         //Stopwatch st = new Stopwatch();
         //Creating a list
-        List<Car> CarBookedList = new List<Car>();
+        Stack<Car> HBStack = new Stack<Car>(10);
+        Stack<Car> SEDANStack = new Stack<Car>(10);
+        Stack<Car> SUVStack = new Stack<Car>(10);
+       
+        
+
+        private bool button1Clicked = false;
+        private bool button2Clicked = false;
+        private bool button3Clicked = false;
 
         /// <summary>
         /// Constructor
@@ -19,15 +27,31 @@ namespace CarBookingForm
         {
 
             InitializeComponent();
+            InitializeStack();
             dateTimePicker1.Enabled = false;
-            button4.Enabled = false;
             button5.Enabled = false;
-            button6.Enabled = false;
             button7.Enabled = false;
             label1.Text = "Hatch Back Car."; label2.Text = "Sedan."; label3.Text = "SUV.";
+
         }
 
-        
+        private void InitializeStack()
+        {
+            for (int i = 0; i < HBStack.Count; i++)
+            {
+                Car HB = new Car() { ID=i,NameofCar="HatchBackFiat" };
+            }
+            for (int i = 0; i < SEDANStack.Count; i++)
+            {
+                Car SEDAN = new Car() { ID = i, NameofCar = "SedanHonda" };
+            }
+            for (int i = 0; i < SUVStack.Count; i++)
+            {
+                Car SUV = new Car() { ID = i, NameofCar = "SUVToyota" };
+            }
+        }
+
+
         #region EventHandlers
         private void pictureBox1_Click(object sender, EventArgs e)
         {
@@ -51,49 +75,44 @@ namespace CarBookingForm
 
         }
 
+
+
         private void button1_Click(object sender, EventArgs e)
         {
+            button1Clicked = true;
+
             CheckAvailability();
 
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            CheckAvailability();
+            button2Clicked = true;
 
+            CheckAvailability();
+            
 
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
+            button3Clicked = true;
+
             CheckAvailability();
 
-
         }
 
-        private void button4_Click(object sender, EventArgs e)
-        {
-            Enabler();
-            button5.Enabled = false;
-            button6.Enabled = false;
-            BookNowHB();
-        }
+     
 
         private void button5_Click(object sender, EventArgs e)
         {
             Enabler();
-            if(button1_Click( )
-            BookNowSEDAN();
+            if (button1Clicked) BookNowHB();
+            if (button2Clicked) BookNowSEDAN();
+            if (button3Clicked) BookNowSUV();
 
         }
 
-        private void button6_Click(object sender, EventArgs e)
-        {
-            Enabler();
-            button4.Enabled = false;
-            button5.Enabled = false;
-            BookNowSUV();
-        }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
