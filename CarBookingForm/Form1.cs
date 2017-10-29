@@ -201,9 +201,12 @@ namespace CarBookingForm
                         + BookingList.Peek().dateTime.ToString(" dd MMM yyyy");
 
             }
+            
+
             catch (Exception ex)
             {
-                label4.Text = "Sorry the selected car is not available. Please try another car";
+                label4.Text = ex.Message + " \nSorry the selected car is not available. Please try another car";
+
             }
             finally { }
             
