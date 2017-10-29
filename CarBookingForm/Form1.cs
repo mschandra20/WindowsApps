@@ -178,23 +178,35 @@ namespace CarBookingForm
         }
         private void BookNow()
         {
-            int MaxCount=Math.Max(Math.Max(HBCount, SEDANCount), SUVCount);
-            if (MaxCount == HBCount)
+            try
             {
-                BookingList.Push(BookNowHB());
-                Availability_Display.Text = HBStack.Count.ToString() + " more cars Available";
+                int MaxCount = Math.Max(Math.Max(HBCount, SEDANCount), SUVCount);
+                if (MaxCount == HBCount)
+                {
+                    BookingList.Push(BookNowHB());
+                    Availability_Display.Text = HBStack.Count.ToString() + " more cars Available";
+                }
+                if (MaxCount == SEDANCount)
+                {
+                    BookingList.Push(BookNowSEDAN());
+                    Availability_Display.Text = SEDANStack.Count.ToString() + " more cars Available";
+                }
+                if (MaxCount == SUVCount)
+                {
+                    BookingList.Push(BookNowSUV());
+                    Availability_Display.Text = SUVStack.Count.ToString() + " more cars Available";
+                }
+                label4.Text = BookingList.Peek().NameofCar
+                        + " is booked on "
+                        + BookingList.Peek().dateTime.ToString(" dd MMM yyyy");
+
             }
-            if (MaxCount == SEDANCount)
+            catch (Exception ex)
             {
-                BookingList.Push(BookNowSEDAN());
-                Availability_Display.Text = HBStack.Count.ToString() + " more cars Available";
+                label4.Text = "Sorry the selected car is not available. Please try another car";
             }
-            if (MaxCount == SUVCount)
-            {
-                BookingList.Push(BookNowSUV());
-                Availability_Display.Text = SUVStack.Count.ToString() + " more cars Available";
-            }
-            label4.Text = BookingList.Peek().ToString();
+            finally { }
+            
         }
 
         private Car BookNowHB()
@@ -207,6 +219,7 @@ namespace CarBookingForm
         private Car BookNowSEDAN()
         {
             Car BookedCar = SEDANStack.Pop();
+            //BookedCar.dateTime = DateTime.Now;
             BookedCar.dateTime = dateTimePicker1.Value;
             SEDANStack.Push(BookedCar);
             return SEDANStack.Pop();
@@ -214,6 +227,7 @@ namespace CarBookingForm
         private Car BookNowSUV()
         {
             Car BookedCar = SUVStack.Pop();
+            //BookedCar.dateTime = DateTime.Now;
             BookedCar.dateTime = dateTimePicker1.Value;
             SUVStack.Push(BookedCar);
             return SUVStack.Pop();

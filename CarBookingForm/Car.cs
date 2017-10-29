@@ -7,7 +7,7 @@ namespace CarBookingForm
         public string NameofCar { get; set; }
 
         public int ID { get; set; }
-
+        private DateTime m_dateTime;
         public int MakeYear
         {
             get
@@ -25,12 +25,13 @@ namespace CarBookingForm
         {
             get
             {
-                return this.dateTime;
+                return m_dateTime;
             }
           set
           {
-               if (dateTime > DateTime.Now)
-                    this.dateTime = value;
+                //This statement is not needed as we disabled the date before today
+               //if (value > DateTime.Now)
+                    m_dateTime = value;
           } 
         }
 
