@@ -6,7 +6,7 @@ namespace CarBookingForm
 {
     public partial class Form1 : Form
     {
-        //Stopwatch st = new Stopwatch();
+        #region variables and stacks
         //Creating stacks
         Stack<Car> HBStack = new Stack<Car>(10);
         Stack<Car> SEDANStack = new Stack<Car>(10);
@@ -21,54 +21,38 @@ namespace CarBookingForm
         private bool button1Clicked = false;
         private bool button2Clicked = false;
         private bool button3Clicked = false;
+        #endregion
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-
+        #region Constructor
+        //Constructor
         public Form1()
         {
 
             InitializeComponent();
             InitializeStack();
+
             dateTimePicker1.Enabled = false;
+
             button5.Enabled = false;
             button7.Enabled = false;
-            label1.Text = "Hatch Back Car."; label2.Text = "Sedan."; label3.Text = "SUV.";
+
+            label1.Text = "Hatch Back Car";
+            label2.Text = "Sedan";
+            label3.Text = "SUV";
 
         }
-
-        private void InitializeStack()
-        {
-            for (int i = 0; i < HBStack.Count; i++)
-            {
-                Car HB = new Car() { ID=i,NameofCar="HatchBackFiat" };
-                HBStack.Push(HB);
-            }
-            for (int i = 0; i < SEDANStack.Count; i++)
-            {
-                Car SEDAN = new Car() { ID = i, NameofCar = "SedanHonda" };
-                SEDANStack.Push(SEDAN);
-            }
-            for (int i = 0; i < SUVStack.Count; i++)
-            {
-                Car SUV = new Car() { ID = i, NameofCar = "SUVToyota" };
-                SUVStack.Push(SUV);
-            }
-        }
-
+        #endregion
 
         #region EventHandlers
+
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             label1.Text = "Hatch Back Car.\nClick below for availability";
         }
-
         private void pictureBox2_Click(object sender, EventArgs e)
         {
             label2.Text = "Sedan.\nClick below for availability";
         }
-
         private void pictureBox3_Click(object sender, EventArgs e)
         {
             label3.Text = "SUV.\nClick below for availability";
@@ -76,56 +60,40 @@ namespace CarBookingForm
 
         //////////////////////////////////////////////////////////////////
         
-
+        //Check Availability buttons
         private void button1_Click(object sender, EventArgs e)
         {
             button1Clicked = true;
 
             CheckAvailability();
-
+            button1Clicked = false;
         }
-
         private void button2_Click(object sender, EventArgs e)
         {
             button2Clicked = true;
 
             CheckAvailability();
-            
+            button2Clicked = false;
+
 
         }
-
         private void button3_Click(object sender, EventArgs e)
         {
             button3Clicked = true;
 
             CheckAvailability();
-
+            button3Clicked = false;
         }
 
-     
-
+        //BookNow Button
         private void button5_Click(object sender, EventArgs e)
         {
             Enabler();
-            if (button1Clicked) BookNowHB();
-            if (button2Clicked) BookNowSEDAN();
-            if (button3Clicked) BookNowSUV();
-
+            BookNow();
         }
 
-
-       
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button7_Click(object sender, EventArgs e)//Submit
+        //Submit Button
+        private void button7_Click(object sender, EventArgs e)
         {
             //Thread workThread = new Thread(Submission);
             //workThread.Start();
@@ -136,6 +104,24 @@ namespace CarBookingForm
 
         #region User Defined methods
 
+        private void InitializeStack()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Car HB = new Car() { ID = i, NameofCar = "HatchBackFiat" };
+                HBStack.Push(HB);
+            }
+            for (int i = 0; i <10; i++)
+            {
+                Car SEDAN = new Car() { ID = i, NameofCar = "SedanHonda" };
+                SEDANStack.Push(SEDAN);
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                Car SUV = new Car() { ID = i, NameofCar = "SUVToyota" };
+                SUVStack.Push(SUV);
+            }
+        }
         private void CheckAvailability()
         {
 
@@ -192,7 +178,10 @@ namespace CarBookingForm
                 BookingList.Push(BookNowSEDAN());
             if (MaxCount == SUVCount)
                 BookingList.Push(BookNowSUV());
+
+            label4.Text = BookingList.Count.ToString();
         }
+
         private Car BookNowHB()
         {
             return HBStack.Pop();
@@ -205,11 +194,13 @@ namespace CarBookingForm
         {
             return SUVStack.Pop();
         }
+
         private void Enabler()
         {
             dateTimePicker1.Enabled = true;
             button7.Enabled = true;
         }
+
         //private void Submission()
         // {
         //BookNow();
@@ -224,6 +215,16 @@ namespace CarBookingForm
         #endregion
 
         #region Unused methods
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
 
         private void label1_Click(object sender, EventArgs e)
         {
