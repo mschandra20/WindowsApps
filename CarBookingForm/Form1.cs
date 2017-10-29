@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace CarBookingForm
@@ -8,12 +7,16 @@ namespace CarBookingForm
     public partial class Form1 : Form
     {
         //Stopwatch st = new Stopwatch();
-        //Creating a list
+        //Creating stacks
         Stack<Car> HBStack = new Stack<Car>(10);
         Stack<Car> SEDANStack = new Stack<Car>(10);
         Stack<Car> SUVStack = new Stack<Car>(10);
-       
-        
+
+        Stack<Car> BookingList = new Stack<Car>();
+
+        private int HBCount = 0;
+        private int SEDANCount = 0;
+        private int SUVCount = 0;
 
         private bool button1Clicked = false;
         private bool button2Clicked = false;
@@ -40,14 +43,17 @@ namespace CarBookingForm
             for (int i = 0; i < HBStack.Count; i++)
             {
                 Car HB = new Car() { ID=i,NameofCar="HatchBackFiat" };
+                HBStack.Push(HB);
             }
             for (int i = 0; i < SEDANStack.Count; i++)
             {
                 Car SEDAN = new Car() { ID = i, NameofCar = "SedanHonda" };
+                SEDANStack.Push(SEDAN);
             }
             for (int i = 0; i < SUVStack.Count; i++)
             {
                 Car SUV = new Car() { ID = i, NameofCar = "SUVToyota" };
+                SUVStack.Push(SUV);
             }
         }
 
@@ -67,15 +73,9 @@ namespace CarBookingForm
         {
             label3.Text = "SUV.\nClick below for availability";
         }
+
+        //////////////////////////////////////////////////////////////////
         
-
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -114,12 +114,7 @@ namespace CarBookingForm
         }
 
 
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
-        {
-
-
-        }
-
+       
         private void label5_Click(object sender, EventArgs e)
         {
 
@@ -132,9 +127,9 @@ namespace CarBookingForm
 
         private void button7_Click(object sender, EventArgs e)//Submit
         {
-            Thread workThread = new Thread(Submission);
-            workThread.Start();
-            label4.Text = st.ElapsedTicks.ToString();
+            //Thread workThread = new Thread(Submission);
+            //workThread.Start();
+            //label4.Text = st.ElapsedTicks.ToString();
         }
 
         #endregion
@@ -143,80 +138,105 @@ namespace CarBookingForm
 
         private void CheckAvailability()
         {
-            if (CarBookedList.Contains(new Car().NameofCar == ""))       /*(a=>a.DateTime=="")||CarBookedList==null)*/
-            {
-                Availability_Display.Text = "Yes! This car is Available." +
-                    "\nClick below To Book Now";
-                button4.Enabled = true;
-                button5.Enabled = true;
-                button6.Enabled = true;
-            }
-            else///HERE EXCEPTION IS OCCURING
-            {
-                int i = CarBookedList.FindIndex(a => a.DateTime < DateTime.Now);
 
-                Availability_Display.Text = "Sorry the selected type of car is not available right now!\nIt will be available after" + CarBookedList[i].ToString();
-                ;// +
-                button4.Enabled = false;
-                button5.Enabled = false;
-                button6.Enabled = false;
-                //        
+            if (button1Clicked)
+            {
+                if (HBStack.Count > 0)
+                {
+                    Availability_Display.Text = "Yes! This car is available." +
+                          "\nClick below To Book Now";
+                    HBCount++;
+                }
+                else
+                    Availability_Display.Text = "Sorry! This car is not available." +
+                        "Please checkout other cars";
+            
+                button5.Enabled = true;
             }
+            if (button2Clicked)
+            {
+                if (SEDANStack.Count > 0)
+                {
+                    Availability_Display.Text = "Yes! This car is available." +
+                          "\nClick below To Book Now";
+                    SEDANCount++;
+                }
+                else
+                    Availability_Display.Text = "Sorry! This car is not available." +
+                        "Please checkout other cars";
+
+                button5.Enabled = true;
+            }
+            if (button3Clicked)
+            {
+                if (SUVStack.Count > 0)
+                {
+                    Availability_Display.Text = "Yes! This car is available." +
+                          "\nClick below To Book Now";
+                    SUVCount++;
+                }
+                else
+                    Availability_Display.Text = "Sorry! This car is not available." +
+                        "Please checkout other cars";
+
+                button5.Enabled = true;
+            }
+                      
         }
         private void BookNow()
         {
-
-            int index = CarBookedList.FindIndex(c => c.DateTime < DateTime.Now);
-            if (index != -1)
-            {
-                string theDate = dateTimePicker1.Value.ToString("dd-hh-mm-ss");
-                CarBookedList[index] = new Car() { DateTime = theDate };
-            }
-
+            int MaxCount=Math.Max(Math.Max(HBCount, SEDANCount), SUVCount);
+            if (MaxCount == HBCount)
+                BookingList.Push(BookNowHB());
+            if (MaxCount == SEDANCount)
+                BookingList.Push(BookNowSEDAN());
+            if (MaxCount == SUVCount)
+                BookingList.Push(BookNowSUV());
         }
-        private void BookNowHB()
+        private Car BookNowHB()
         {
-            Car hb = new Car()
-            {
-                NameOfTheCar = "HB",
-                DateTime = DateTime.Now
-            };
-            CarBookedList.Add(hb);
+            return HBStack.Pop();
         }
-        private void BookNowSEDAN()
+        private Car BookNowSEDAN()
         {
-            Car sedan = new Car()
-            {
-                NameOfTheCar = "SEDAN",
-                DateTime = DateTime.Now
-            };
-            CarBookedList.Add(sedan);
+            return SEDANStack.Pop();
         }
-        private void BookNowSUV()
+        private Car BookNowSUV()
         {
-            Car suv = new Car()
-            {
-                NameOfTheCar = "SUV",
-                DateTime = DateTime.Now
-            };
-            CarBookedList.Add(suv);
+            return SUVStack.Pop();
         }
         private void Enabler()
         {
             dateTimePicker1.Enabled = true;
             button7.Enabled = true;
         }
-        private void Submission()
-        {
-            BookNow();
-            label4.Text = "You Have Succesfully Booked Your Car ! :)";
+        //private void Submission()
+        // {
+        //BookNow();
+        //label4.Text = "You Have Succesfully Booked Your Car ! :)";
 
-            Thread.Sleep(10000);
-            CarBookedList.Clear();
-            int num = CarBookedList.Capacity;
-            label4.Text = num.ToString();
-            label4.Text = Convert.ToString(num);
+        //Thread.Sleep(10000);
+        //CarBookedList.Clear();
+        //int num = CarBookedList.Capacity;
+        //label4.Text = num.ToString();
+        //label4.Text = Convert.ToString(num);
+        //}
+        #endregion
+
+        #region Unused methods
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+
+
+        }
+
+        /////////////////////////////////////////////////////////////////
+
         #endregion
 
     }
