@@ -74,8 +74,6 @@ namespace CarBookingForm
 
             CheckAvailability();
             button2Clicked = false;
-
-
         }
         private void button3_Click(object sender, EventArgs e)
         {
@@ -89,12 +87,15 @@ namespace CarBookingForm
         private void button5_Click(object sender, EventArgs e)
         {
             Enabler();
-            BookNow();
+           
         }
 
         //Submit Button
         private void button7_Click(object sender, EventArgs e)
         {
+
+            BookNow();
+
             //Thread workThread = new Thread(Submission);
             //workThread.Start();
             //label4.Text = st.ElapsedTicks.ToString();
@@ -132,6 +133,8 @@ namespace CarBookingForm
                     Availability_Display.Text = "Yes! This car is available." +
                           "\nClick below To Book Now";
                     HBCount++;
+                    SEDANCount = 0;
+                    SUVCount = 0;
                 }
                 else
                     Availability_Display.Text = "Sorry! This car is not available." +
@@ -146,6 +149,8 @@ namespace CarBookingForm
                     Availability_Display.Text = "Yes! This car is available." +
                           "\nClick below To Book Now";
                     SEDANCount++;
+                    HBCount = 0;
+                    SUVCount = 0;
                 }
                 else
                     Availability_Display.Text = "Sorry! This car is not available." +
@@ -160,6 +165,8 @@ namespace CarBookingForm
                     Availability_Display.Text = "Yes! This car is available." +
                           "\nClick below To Book Now";
                     SUVCount++;
+                    HBCount = 0;
+                    SEDANCount = 0;
                 }
                 else
                     Availability_Display.Text = "Sorry! This car is not available." +
@@ -173,25 +180,42 @@ namespace CarBookingForm
         {
             int MaxCount=Math.Max(Math.Max(HBCount, SEDANCount), SUVCount);
             if (MaxCount == HBCount)
+            {
                 BookingList.Push(BookNowHB());
+                Availability_Display.Text = HBStack.Count.ToString() + " more cars Available";
+            }
             if (MaxCount == SEDANCount)
+            {
                 BookingList.Push(BookNowSEDAN());
+                Availability_Display.Text = HBStack.Count.ToString() + " more cars Available";
+            }
             if (MaxCount == SUVCount)
+            {
                 BookingList.Push(BookNowSUV());
-
-            label4.Text = BookingList.Count.ToString();
+                Availability_Display.Text = SUVStack.Count.ToString() + " more cars Available";
+            }
+            label4.Text = BookingList.Peek().ToString();
         }
 
         private Car BookNowHB()
         {
+            Car BookedCar = HBStack.Pop();
+            BookedCar.dateTime = dateTimePicker1.Value;
+            HBStack.Push(BookedCar);
             return HBStack.Pop();
         }
         private Car BookNowSEDAN()
         {
+            Car BookedCar = SEDANStack.Pop();
+            BookedCar.dateTime = dateTimePicker1.Value;
+            SEDANStack.Push(BookedCar);
             return SEDANStack.Pop();
         }
         private Car BookNowSUV()
         {
+            Car BookedCar = SUVStack.Pop();
+            BookedCar.dateTime = dateTimePicker1.Value;
+            SUVStack.Push(BookedCar);
             return SUVStack.Pop();
         }
 
